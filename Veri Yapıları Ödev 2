@@ -1,1 +1,205 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace VeriYapilariOdev3
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            DaireselBagliListe liste = new DaireselBagliListe(); // Yeni bir dairesel bağlı liste oluştur
+
+            liste.SonunaEkle(10); // Listeye 10 ekle
+            liste.SonunaEkle(20); // Listeye 20 ekle
+            liste.SonunaEkle(30); // Listeye 30 ekle
+            liste.ListeyiYazdir(); // Listeyi yazdır (10 20 30)
+
+            liste.BastanEkle(0); // Listeye 0 ekle (baştan)
+            liste.ListeyiYazdir(); // Listeyi yazdır (0 10 20 30)
+
+            liste.BelirtilenSiradaEkle(2, 15); // 2. pozisyona 15 ekle
+            liste.ListeyiYazdir(); // Listeyi yazdır (0 10 15 20 30)
+
+            liste.SonuSil(); // Listenin son elemanını sil
+            liste.ListeyiYazdir(); // Listeyi yazdır (0 10 15 20)
+
+            liste.BastanSil(); // Listenin baştaki elemanını sil
+            liste.ListeyiYazdir(); // Listeyi yazdır (10 15 20)
+
+            liste.BelirtilenSiradaSil(1); // 1. pozisyondaki elemanı sil
+            liste.ListeyiYazdir(); // Listeyi yazdır (10 20)
+
+            Console.ReadLine();
+        }
+    }
+    //düğüm sınıfı
+    public class Node
+    {
+        public int Data; // Düğümün verisi
+        public Node next; // Sonraki düğüm
+
+        // Düğümün yapıcı metodu
+        public Node(int data) 
+        { 
+            Data = data; //Düğümün verisini ayarlıyoruz
+        }
+    }
+
+    // Dairesel bağlı liste sınıfı
+    public class DaireselBagliListe
+    {
+        Node head; // Listenin başını tutan değişken
+        // Dairesel bağlı listeye baştan ekleme metodu
+        public void BastanEkle (int data)
+        {
+            Node newNode = new Node(data); // Yeni düğüm oluştur
+            if (head == null) // Eğer liste boşsa
+            {
+                head = newNode; // Baş düğümü yeni düğüm yaptık
+                head.next = head; // Sonraki eleman ilk elemanı işaret ediyor
+            }
+            else
+            {
+                Node temp = head; // Geçici düğüm başa ata
+                while (temp.next != head) //Listenin sonuna kadar git
+                {
+                    temp = temp.next; // Sonraki düğüme geç
+                }
+                temp.next = newNode; // Son düğümün Next'ini yeni düğüme bağla
+                newNode.next = head; // Yeni düğümün Next'ini baş düğüme bağla
+                head = newNode; // Baş düğümü yeni düğüm yap
+            }
+        }
+
+        // Dairesel bağlı listeye sonuna ekleme metodu
+        public void SonunaEkle(int data)
+        {
+            Node newNode = new Node(data); // Yeni düğüm oluştur
+            if (head == null) // Eğer liste boşsa
+            {
+                head = newNode; // Baş düğümü yeni düğüm yap
+                head.next = head; // Sonraki eleman ilk elemanı işaret ediyor
+            }
+            else
+            {
+                Node temp = head; // Geçici düğüm başa referans
+                while (temp.next != head) // Listenin sonuna kadar git
+                {
+                    temp = temp.next; // Sonraki düğüme geç
+                }
+                temp.next = newNode; // Son düğümün Next'ini yeni düğüme bağla
+                newNode.next = head; // Yeni düğümün Next'ini baş düğüme bağla
+            }
+        }
+
+        // İstenilen sırada ekleme metodu
+        public void BelirtilenSiradaEkle(int deger, int data)
+        {
+            if (deger == 0) // Eğer değer sıfırsa
+            {
+                BastanEkle(data); // Başta ekle
+                return; // İşlemi sonlandır
+            }
+
+            Node newNode = new Node(data); // Yeni düğüm oluştur
+            Node temp = head; // Geçici düğüm başı işaret eder
+            for (int i = 0; i < deger - 1; i++) // Değere kadar git
+            {
+                if (temp.next == head) // Eğer son elemana ulaştıysa
+                    break; // Döngüden çık
+                temp = temp.next; // Sonraki düğüme geç
+            }
+            newNode.next = temp.next; // Yeni düğümün Next'ini mevcut düğümün Next'ine ayarla
+            temp.next = newNode; // Mevcut düğümün Next'ini yeni düğüme bağla
+        }
+
+        // Dairesel bağlı listeden baştaki elemanı silme metodu
+        public void BastanSil()
+        {
+            if (head == null) 
+                return; // Eğer liste boşsa çık
+
+            if (head.next == head) // Eğer tek eleman varsa
+            {
+                head = null; // Listeyi boş yap
+                return; // İşlemi sonlandır
+            }
+
+            Node temp = head; // Geçici düğüm başa referans
+            while (temp.next != head) // Son elemana kadar git
+            {
+                temp = temp.next; // Sonraki düğüme geç
+            }
+            head = head.next; // Baş düğümünü güncelle
+            temp.next = head; // Son düğümün Next'ini yeni baş düğüme bağla
+        }
+
+        // Dairesel bağlı listeden son elemanı silme metodu
+        public void SonuSil()
+        {
+            if (head == null) 
+                return; // Eğer liste boşsa çık
+
+            if (head.next == head) // Eğer tek eleman varsa
+            {
+                head = null; // Listeyi boş yap
+                return; // İşlemi sonlandır
+            }
+
+            Node temp = head; // Geçici düğüm başa referans
+            while (temp.next.next != head) // Son elemana kadar git
+            {
+                temp = temp.next; // Sonraki düğüme geç
+            }
+            temp.next = head; // Son düğümün Next'ini baş düğüme bağla
+        }
+
+        // İstenilen sırada silme metodu
+        public void BelirtilenSiradaSil(int deger)
+        {
+            if (head == null) 
+                return; // Eğer liste boşsa çık
+
+            if (deger == 0) // Eğer değer sıfırsa
+            {
+                BastanSil(); // Başta sil
+                return; // İşlemi sonlandır
+            }
+
+            Node temp = head; // Geçici düğüm başa referans
+            for (int i = 0; i < deger - 1; i++) // Değere kadar git
+            {
+                if (temp.next == head) return; // Eğer son elemana ulaştıysa çık
+                temp = temp.next; // Sonraki düğüme geç
+            }
+
+            if (temp.next != head) // Eğer sadece bir eleman varsa
+            {
+                temp.next = temp.next.next; // Geçici düğümün Next'ini bir sonraki düğüme bağla
+            }
+        }
+
+        // Dairesel bağlı listeyi yazdırma metodu
+        public void ListeyiYazdir()
+        {
+            if (head == null)
+                return; // Eğer liste boşsa çık
+
+            Node temp = head; // Geçici düğüm başa referans
+            do
+            {
+                Console.Write(temp.Data + " "); // Düğüm verisini yazdır
+                temp = temp.next; // Sonraki düğüme geç
+            } while (temp != head); // Baş düğümüne kadar devam et
+            Console.WriteLine(); // Yeni satıra geç
+        }
+
+
+
+
+    }
+}
 
