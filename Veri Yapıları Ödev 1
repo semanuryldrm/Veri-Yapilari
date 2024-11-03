@@ -1,1 +1,114 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace VeriYapilariOdev1
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Metotlar OgrenciListesi = new Metotlar(); // Yeni öğrenci listesi oluştur
+            // Öğrencileri ekle
+            OgrenciListesi.OgrenciEkle(101, "Semanur", "Yıldırım");
+            OgrenciListesi.OgrenciEkle(102, "İlayda", "Öztürk");
+            OgrenciListesi.OgrenciEkle(103, "Merve", "Yılmaz");
+
+            Console.WriteLine("Tüm Öğrenciler:"); // Başlık yazdır
+            OgrenciListesi.OgrencileriYazdir(); // Tüm öğrencileri yazdır
+
+            OgrenciListesi.OgrenciSil(103); // 103 numaralı öğrenciyi sil
+
+            Console.WriteLine("\nÖğrenci silindikten sonra tüm öğrenciler:"); // Başlık yazdır
+            OgrenciListesi.OgrencileriYazdir(); // Silme işleminden sonra tüm öğrencileri yazdır
+
+            Console.ReadLine();
+        }
+
+        // Öğrenci düğümünü temsil eden sınıf
+        class Ogrenci
+        {
+            public int No; // Öğrenci numarasını tutan özellik
+            public string Ad; // Öğrencinin adını tutan özellik
+            public string Soyad; // Öğrencinin soyadını tutan özellik
+            public Ogrenci next; // Sonraki düğümü gösteren özellik
+            // Yapıcı metot
+            public Ogrenci (int no, string ad, string soyad)
+            {
+                No = no; // Öğrenci numarasını atar
+                Ad = ad; // Adı atar
+                Soyad = soyad; // Soyadı atar
+            }
+        }
+        // Metotlar için sınıf
+        class Metotlar
+        {
+            Ogrenci Head; // Listenin başını tutan özellik
+            // Yeni öğrenci eklemek için metot
+            public void OgrenciEkle (int no, string ad, string soyad)
+            {
+                Ogrenci ogrenci = new Ogrenci (no, ad, soyad); // Yeni düğüm oluştur
+
+                if (Head == null) //Eğer liste boşsa
+                {
+                    Head = ogrenci; // ogrenciyi head olarak ata
+                }
+                else // Liste boş değilse
+                {
+                    var current = Head; // Mevcut düğümü başa ata
+                    while (current.next != null) // Listenin sonuna kadar git
+                    {
+                        current = current.next; // Sonraki düğüme geç
+                    }
+                    current.next = ogrenci; // ogrenciyi son düğümün sonraki düğümü olarak ata
+                }
+            }
+
+            // Öğrenci silmek için metot
+            public void OgrenciSil (int no)
+            {
+                Ogrenci current = Head; //Mevcut düğümü başa ata
+                Ogrenci prev = null; //Önceki düğümü başta boş ata
+
+                while (current != null && current.No != no) // Bu döngü, mevcut düğüm null olmadıkça ve
+                                                            // mevcut düğümün öğrenci numarası aranan
+                                                            // öğrenci numarasına eşit olmadıkça devam eder.
+                                                            // Yani, öğrenci listesinde arama yapar.
+                {
+                    prev = current; // Öceki düğümü güncelle
+                    current = current.next; // Mevcut düğümü sonraki düğüme geç
+                }
+
+                if (current == null) //Öğrenci bulunamazsa 
+                {
+                    Console.WriteLine("Öğrenci bulunamadı."); // Bilgilendirme yap
+                    return; // Metottan çık
+                }
+                if (prev == null) // Eğer baş düğüm silinecekse
+                {
+                    Head = current.next; // Baş düğümü bir sonraki düğümle güncelle
+                }
+                else
+                {
+                    prev.next = current.next; // Önceki düğümün sonraki düğümünü mevcut düğümün sonraki düğümü olarak ata
+                }
+            }
+
+            // Tüm öğrencileri yazdırmak için metot
+            public void OgrencileriYazdir()
+            {
+                var current = Head; // Mevcut düğümü başa ata
+                while (current != null) // Liste sonuna kadar devam et
+                {
+                    // Öğrencinin bilgilerini yazdır
+                    Console.WriteLine($"Numara: {current.No}, İsim: {current.Ad}, Soyisim: {current.Soyad}");
+                    current = current.next; // Sonraki düğüme geç
+                }
+
+            }
+        }
+    }
+}
 
